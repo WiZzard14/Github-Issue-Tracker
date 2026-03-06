@@ -15,8 +15,53 @@
 
     <link rel="stylesheet" href="./styles/style.css">
 </head>
-<body class="bg-[#f3f3f3]">
-    
+<body class="bg-[#f3f3f3] min-h-screen">
+
+    <section id="loginSection" class="min-h-screen flex items-center justify-center px-4 py-10 bg-[#f3f4f6]">
+        <div class="w-full max-w-[520px] bg-[#f8f8f8] rounded-2xl shadow-md border border-gray-200 px-8 py-10">
+            
+            <div class="text-center mb-8">
+                <img src="./assets/github-logo.png" alt="GitHub Logo" class="w-28 h-28 mx-auto mb-6 object-contain">
+                <h1 class="text-[28px] font-bold text-[#2d3748] leading-tight">GitHub Issues Tracker</h1>
+                <p class="text-[16px] text-[#718096] mt-1">Sign in to manage your issues</p>
+            </div>
+
+            <div class="mb-4">
+                <label for="usernameInput" class="block text-[16px] font-semibold text-[#2d3748] mb-3">Username</label>
+                <input id="usernameInput" type="text" placeholder="Enter Username" class="w-full h-[56px] px-4 rounded-xl border border-gray-300 bg-[#f8f8f8] text-[16px] text-gray-700 outline-none">
+                <p class="text-[#3b00ff] text-[14px] mt-2">Default: admin</p>
+            </div>
+
+            <div class="mb-6">
+                <label for="passwordInput" class="block text-[16px] font-semibold text-[#2d3748] mb-3">Password</label>
+                <input id="passwordInput" type="password" placeholder="Enter Password" class="w-full h-[56px] px-4 rounded-xl border border-gray-300 bg-[#f8f8f8] text-[16px] text-gray-700 outline-none">
+                <p class="text-[#3b00ff] text-[14px] mt-2">Default: admin123</p>
+            </div>
+
+            <button id="loginBtn" class="w-full h-[52px] rounded-xl text-white text-[16px] font-semibold bg-gradient-to-r from-[#4d00ff] to-[#5b19ff] border-none">Sign In</button>
+
+            <div class="flex items-center gap-4 my-8">
+                <div class="flex-1 h-[1px] bg-gray-300"></div>
+                <span class="text-[#2d3748] text-[16px]">OR</span>
+                <div class="flex-1 h-[1px] bg-gray-300"></div>
+            </div>
+
+            <div class="text-center">
+                <p class="text-[16px] text-[#718096] mb-4">Demo Credentials:</p>
+
+                <div class="bg-[#eef0f2] rounded-xl py-6 px-4">
+                    <p class="text-[18px] text-[#2d3748]">
+                        <span class="font-bold">Username:</span> admin
+                    </p>
+                    <p class="text-[18px] text-[#2d3748]">
+                        <span class="font-bold">Password:</span> admin123
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+        
     <header class="bg-[#ececec] border-b border-gray-300">
         <nav class="max-w-[1366px] mx-auto px-6 py-3 flex items-center justify-between">
             <div class="flex items-center px-2 py-1 gap-2">
@@ -38,7 +83,7 @@
         </nav>
     </header>
 
+    
     <script src="./script/index.js"></script>
-</body>
 </body>
 </html>
