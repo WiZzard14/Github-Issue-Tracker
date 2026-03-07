@@ -143,7 +143,7 @@ const displayIssues = (issues) => {
                         </span>
                     </div>
 
-                    <h3 class="text-[13px] font-semibold text-gray-800 leading-5 mb-2 cursor-pointer">
+                    <h3 onclick="loadIssueDetails(${issue.id})" class="text-[13px] font-semibold text-gray-800 leading-5 mb-2 cursor-pointer hover:text-blue-600">
                         ${issue.title}
                     </h3>
 
@@ -165,6 +165,42 @@ const displayIssues = (issues) => {
 
         issueContainer.appendChild(card);
     }
+}
+
+const loadIssueDetails = (id) => {
+    fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`)
+        .then(res => res.json())
+        .then(data => showIssueModal(data.data));
+}
+
+const showIssueModal = (issue) => {
+    document.getElementById("modal-title").innerText = issue.title;
+
+    let labelsHTML = "";
+
+    for (let label of issue.labels) {
+        labelsHTML += `
+            <span class="inline-block text-[10px] px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 mr-2">
+                ${label.toUpperCase()}
+            </span>
+        `;
+    }
+
+    document.getElementById("modal-content").innerHTML = `
+        <p><span class="font-semibold">Description:</span> ${issue.description}</p>
+        <p><span class="font-semibold">Status:</span> ${issue.status}</p>
+        <p><span class="font-semibold">Priority:</span> ${issue.priority}</p>
+        <p><span class="font-semibold">Author:</span> ${issue.author}</p>
+        <p><span class="font-semibold">Assignee:</span> ${issue.assignee}</p>
+        <p><span class="font-semibold">Created At:</span> ${new Date(issue.createdAt).toLocaleDateString()}</p>
+        <p><span class="font-semibold">Updated At:</span> ${new Date(issue.updatedAt).toLocaleDateString()}</p>
+        <div>
+            <span class="font-semibold">Labels:</span>
+            <div class="mt-2">${labelsHTML}</div>
+        </div>
+    `;
+
+    document.getElementById("issue_modal").showModal();
 }
 
 
