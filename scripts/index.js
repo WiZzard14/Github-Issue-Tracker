@@ -60,6 +60,27 @@ const showClosedIssues = () => {
     updateIssueCount(closedIssues);
 }
 
+const searchIssues = () => {
+    const searchText = document.getElementById("search-input").value.trim();
+
+    if (searchText === "") {
+        displayIssues(allIssues);
+        updateIssueCount(allIssues);
+        return;
+    }
+
+    fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`)
+        .then(res => res.json())
+        .then(data => {
+            displayIssues(data.data);
+            updateIssueCount(data.data);
+        });
+}
+
+document.getElementById("search-input").addEventListener("input", function () {
+    searchIssues();
+});
+
 const displayIssues = (issues) => {
     const issueContainer = document.getElementById("issue-container");
     issueContainer.innerHTML = "";
