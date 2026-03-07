@@ -16,12 +16,15 @@ loginBtn.addEventListener("click", function () {
 });
 
 const loadIssues = () => {
+    showLoader();
+
     fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
         .then(res => res.json())
         .then(data => {
             allIssues = data.data;
             displayIssues(allIssues);
             updateIssueCount(allIssues);
+            hideLoader();
         });
 }
 
@@ -69,12 +72,23 @@ const searchIssues = () => {
         return;
     }
 
+    showLoader();
+
     fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`)
         .then(res => res.json())
         .then(data => {
             displayIssues(data.data);
             updateIssueCount(data.data);
+            hideLoader();
         });
+}
+
+const showLoader = () => {
+    document.getElementById("loader").classList.remove("hidden");
+}
+
+const hideLoader = () => {
+    document.getElementById("loader").classList.add("hidden");
 }
 
 document.getElementById("search-input").addEventListener("input", function () {
