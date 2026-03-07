@@ -12,3 +12,88 @@ loginBtn.addEventListener("click", function () {
     }
 });
 
+const loadIssues = () => {
+    fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
+        .then(res => res.json())
+        .then(data => displayIssues(data.data));
+}
+
+const displayIssues = (issues) => {
+    const issueContainer = document.getElementById("issue-container");
+    issueContainer.innerHTML = "";
+
+    for (let issue of issues) {
+        const card = document.createElement("div");
+
+        let statusImage = "./assets/Open-Status.png";
+        let topBorderColor = "bg-green-500";
+
+        if (issue.status.toLowerCase() === "closed") {
+            statusImage = "./assets/Closed-Status.png";
+            topBorderColor = "bg-purple-500";
+        }
+
+        let priorityClass = "bg-gray-100 text-gray-500";
+
+        if (issue.priority.toLowerCase() === "high") {
+            priorityClass = "bg-red-100 text-red-500";
+        } 
+        else if (issue.priority.toLowerCase() === "medium") {
+            priorityClass = "bg-orange-100 text-orange-500";
+        } 
+        else if (issue.priority.toLowerCase() === "low") {
+            priorityClass = "bg-gray-100 text-gray-500";
+        }
+
+        let labelsHTML = "";
+        for (let label of issue.labels) {
+            labelsHTML += `
+                <span class="text-[10px] px-2 py-1 rounded-full bg-orange-100 text-orange-500">
+                    ${label}
+                </span>
+            `;
+        }
+
+        const createdDate = new Date(issue.createdAt).toLocaleDateString();
+
+        card.innerHTML = `
+            <div class="bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden flex flex-col h-[260px]">
+                
+                <div class="h-[3px] ${topBorderColor}"></div>
+
+                <div class="p-4 flex-grow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <img src="${statusImage}" alt="status" class="w-4 h-4">
+                        </div>
+
+                        <span class="text-[10px] px-2 py-1 rounded-full ${priorityClass}">
+                            ${issue.priority}
+                        </span>
+                    </div>
+
+                    <h3 class="text-[13px] font-semibold text-gray-800 leading-5 mb-2">
+                        ${issue.title}
+                    </h3>
+
+                    <p class="text-[11px] text-gray-400 leading-4 mb-3 h-[32px] overflow-hidden">
+                        ${issue.description}
+                    </p>
+
+                    <div class="flex flex-wrap gap-2">
+                        ${labelsHTML}
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 px-4 py-3 text-[11px] text-gray-400">
+                    <p>#${issue.id} by ${issue.author}</p>
+                    <p>${createdDate}</p>
+                </div>
+            </div>
+        `;
+
+        issueContainer.appendChild(card);
+    }
+}
+
+loadIssues();
