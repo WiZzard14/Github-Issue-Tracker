@@ -1,3 +1,5 @@
+let allIssues = [];
+
 const loginBtn = document.getElementById("loginBtn");
 
 loginBtn.addEventListener("click", function () {
@@ -7,6 +9,7 @@ loginBtn.addEventListener("click", function () {
     if (username === "admin" && password === "admin123") {
         document.getElementById("loginSection").classList.add("hidden");
         document.getElementById("mainSection").classList.remove("hidden");
+        loadIssues();
     } else {
         alert("Wrong username or password");
     }
@@ -15,7 +18,46 @@ loginBtn.addEventListener("click", function () {
 const loadIssues = () => {
     fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
         .then(res => res.json())
-        .then(data => displayIssues(data.data));
+        .then(data => {
+            allIssues = data.data;
+            displayIssues(allIssues);
+            updateIssueCount(allIssues);
+        });
+}
+
+const updateIssueCount = (issues) => {
+    document.getElementById("issue-count").innerText = issues.length + " Issues";
+}
+
+const removeActiveBtn = () => {
+    document.getElementById("all-btn").className = "bg-white text-gray-500 text-[12px] font-medium px-8 py-2 rounded-sm border border-gray-200";
+    document.getElementById("open-btn").className = "bg-white text-gray-500 text-[12px] font-medium px-8 py-2 rounded-sm border border-gray-200";
+    document.getElementById("closed-btn").className = "bg-white text-gray-500 text-[12px] font-medium px-8 py-2 rounded-sm border border-gray-200";
+}
+
+const showAllIssues = () => {
+    removeActiveBtn();
+    document.getElementById("all-btn").className = "bg-[#4f1eff] text-white text-[12px] font-medium px-8 py-2 rounded-sm";
+    displayIssues(allIssues);
+    updateIssueCount(allIssues);
+}
+
+const showOpenIssues = () => {
+    removeActiveBtn();
+    document.getElementById("open-btn").className = "bg-[#4f1eff] text-white text-[12px] font-medium px-8 py-2 rounded-sm";
+
+    const openIssues = allIssues.filter(issue => issue.status.toLowerCase() === "open");
+    displayIssues(openIssues);
+    updateIssueCount(openIssues);
+}
+
+const showClosedIssues = () => {
+    removeActiveBtn();
+    document.getElementById("closed-btn").className = "bg-[#4f1eff] text-white text-[12px] font-medium px-8 py-2 rounded-sm";
+
+    const closedIssues = allIssues.filter(issue => issue.status.toLowerCase() === "closed");
+    displayIssues(closedIssues);
+    updateIssueCount(closedIssues);
 }
 
 const displayIssues = (issues) => {
@@ -29,7 +71,7 @@ const displayIssues = (issues) => {
         let topBorderColor = "bg-green-500";
 
         if (issue.status.toLowerCase() === "closed") {
-            statusImage = "./assets/Closed-Status.png";
+            statusImage = "./assets/Closed- Status .png";
             topBorderColor = "bg-purple-500";
         }
 
@@ -46,10 +88,18 @@ const displayIssues = (issues) => {
         }
 
         let labelsHTML = "";
+
         for (let label of issue.labels) {
+
+            let labelClass = "bg-yellow-100 text-yellow-600";
+
+            if (label.toLowerCase() === "bug") {
+                labelClass = "bg-red-100 text-red-500";
+            }
+
             labelsHTML += `
-                <span class="text-[10px] px-2 py-1 rounded-full bg-orange-100 text-orange-500">
-                    ${label}
+                <span class="text-[10px] px-3 py-1 rounded-full ${labelClass}">
+                    ${label.toUpperCase()}
                 </span>
             `;
         }
@@ -72,7 +122,7 @@ const displayIssues = (issues) => {
                         </span>
                     </div>
 
-                    <h3 class="text-[13px] font-semibold text-gray-800 leading-5 mb-2">
+                    <h3 class="text-[13px] font-semibold text-gray-800 leading-5 mb-2 cursor-pointer">
                         ${issue.title}
                     </h3>
 
@@ -96,4 +146,5 @@ const displayIssues = (issues) => {
     }
 }
 
-loadIssues();
+
+
