@@ -189,30 +189,50 @@ const loadIssueDetails = (id) => {
 
 const showIssueModal = (issue) => {
     document.getElementById("modal-title").innerText = issue.title;
+    document.getElementById("modal-author").innerText = `Opened by ${issue.author}`;
+    document.getElementById("modal-date").innerText = new Date(issue.createdAt).toLocaleDateString();
+    document.getElementById("modal-description").innerText = issue.description;
+    document.getElementById("modal-assignee").innerText = issue.assignee ? issue.assignee : "Not assigned yet";
+
+    const modalStatus = document.getElementById("modal-status");
+    modalStatus.innerText = issue.status.charAt(0).toUpperCase() + issue.status.slice(1);
+
+    if (issue.status.toLowerCase() === "open") {
+        modalStatus.className = "px-3 py-1 rounded-full bg-green-600 text-white text-xs font-medium";
+    } else {
+        modalStatus.className = "px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-medium";
+    }
+
+    const modalPriority = document.getElementById("modal-priority");
+    modalPriority.innerText = issue.priority.toUpperCase();
+
+    if (issue.priority.toLowerCase() === "high") {
+        modalPriority.className = "inline-block px-4 py-1 rounded-full text-white text-sm font-medium bg-red-500";
+    } 
+    else if (issue.priority.toLowerCase() === "medium") {
+        modalPriority.className = "inline-block px-4 py-1 rounded-full text-white text-sm font-medium bg-orange-400";
+    } 
+    else {
+        modalPriority.className = "inline-block px-4 py-1 rounded-full text-white text-sm font-medium bg-gray-500";
+    }
 
     let labelsHTML = "";
 
     for (let label of issue.labels) {
+        let labelClass = "bg-yellow-100 text-yellow-600";
+
+        if (label.toLowerCase() === "bug") {
+            labelClass = "bg-red-100 text-red-500";
+        }
+
         labelsHTML += `
-            <span class="inline-block text-[10px] px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 mr-2">
+            <span class="text-[11px] px-3 py-1 rounded-full ${labelClass}">
                 ${label.toUpperCase()}
             </span>
         `;
     }
 
-    document.getElementById("modal-content").innerHTML = `
-        <p><span class="font-semibold">Description:</span> ${issue.description}</p>
-        <p><span class="font-semibold">Status:</span> ${issue.status}</p>
-        <p><span class="font-semibold">Priority:</span> ${issue.priority}</p>
-        <p><span class="font-semibold">Author:</span> ${issue.author}</p>
-        <p><span class="font-semibold">Assignee:</span> ${issue.assignee}</p>
-        <p><span class="font-semibold">Created At:</span> ${new Date(issue.createdAt).toLocaleDateString()}</p>
-        <p><span class="font-semibold">Updated At:</span> ${new Date(issue.updatedAt).toLocaleDateString()}</p>
-        <div>
-            <span class="font-semibold">Labels:</span>
-            <div class="mt-2">${labelsHTML}</div>
-        </div>
-    `;
+    document.getElementById("modal-labels").innerHTML = labelsHTML;
 
     document.getElementById("issue_modal").showModal();
 }
